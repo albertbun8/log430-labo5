@@ -18,7 +18,7 @@ Dans ce labo, nous allons ajouter des fonctionnalités de paiement à notre appl
 Créez vos propres dépôts à partir des dépôts gabarits (templates). Vous pouvez modifier la visibilité pour les rendre privés si vous voulez.
 ```bash
 git clone https://github.com/[votrenom]/log430-labo5
-git clone https://github.com/[votrenom]/log430-labo5-paiement
+git clone https://github.com/[votrenom]/log430-labo5-payment
 cd log430-labo5
 ```
 Ensuite, clonez votre dépôt sur votre ordinateur et sur votre serveur de déploiement (ex. VM). Veillez à ne pas cloner le dépôt d'origine.
@@ -47,7 +47,7 @@ Utilisez les mêmes approches qui ont été abordées lors des derniers laborato
 ## 🧪 Activités pratiques
 
 ### 1. Intégration du service de paiement
-Dans `orders/commands/write_order.py`, la fonction `add_order` effectue la création des nouvelles commandes. Dans cette version de l'application, elle va également accomplir une étape supplémentaire : demander a un service de paiement la création d'une transaction de paiement, que nous garderons sous forme de lien avec la commande pour que, plus tard, on puisse payer pour la commande.
+Dans `orders/commands/write_order.py`, la fonction `add_order` effectue la création des nouvelles commandes. Dans cette version de l'application, elle va également accomplir une étape supplémentaire : demander à un service de paiement la création d'une transaction de paiement, que nous garderons sous forme de lien avec la commande pour que, plus tard, on puisse payer pour la commande.
 
 **Votre tâche :** dans `orders/commands/write_order.py`, complétez l'implémentation de la fonction `request_payment_link` pour faire un appel POST au endpoint `/payments` dans le service de paiement et obtenir le `payment_id`.
 
