@@ -22,7 +22,7 @@ Pour faciliter la compréhension des instructions, votre environnement de dével
 ## ❓ Questions fréquentes
 
 ### Pourquoi ne pas configurer plutôt le nœud master dans mon environnement de développement? 
-Pour simplifier la configuration réseau, il est préférable que le nœud master ait une IP fixe. Les workers peuvent avoir n'importe quelle adresse IP, et elle peut changer à n'importe quel moment sans impact sur notre configuration, car chaque fois que l'IP change, le worker se reconnecte au master. Comme la majorité des gens n'ont pas d'IP fixe dans leur connexion internet à domicile, nous recommandons cette configuration. Cependant, si vous avez une IP fixe chez vous, vous pouvez créer le nœud master sur votre ordinateur.
+Pour simplifier la configuration réseau, il est préférable que le nœud master ait une IP fixe. Les workers peuvent avoir n'importe quelle adresse IP, et elle peut changer à n'importe quel moment sans impact sur notre configuration, car chaque fois que l'IP change, le worker se reconnecte au master. 
 
 ### J'ai vu d'autres tutoriels de Kubernetes et c'est différent. Quelle est la bonne manière de le faire ?
 Il existe plusieurs façons différentes d'installer Kubernetes, et cela variera en fonction de votre configuration réseau, du nombre de serveurs dans la grappe, de la technologie de conteneurs utilisée, etc. Ici, nous avons choisi `k3s` parce que c'est une solution simple et rapide pour créer une petite grappe de serveurs qui sert des applications conteneurisées avec Docker (comme Store Manager, par exemple).
