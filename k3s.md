@@ -2,6 +2,7 @@
 <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Ets_quebec_logo.png" width="250">    
 ÉTS - LOG430 - Architecture logicielle - Chargé de laboratoire : Gabriel C. Ullmann, Hiver 2026.
 
+
 Dans ce tutoriel, vous allez utiliser [k3s](https://k3s.io/), une version simplifiée de [Kubernetes](https://github.com/kubernetes/kubernetes) (k8s), pour créer une grappe avec 2 serveurs et déployer l'application de votre environnement de développement à votre environnement de production de manière semi-automatique, en pouvant répliquer votre application et ajouter plusieurs nœuds à la grappe de manière simple.
 
 ## 🎯 Objectifs d'apprentissage
