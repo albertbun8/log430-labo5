@@ -2,12 +2,13 @@
 <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Ets_quebec_logo.png" width="250">    
 ÉTS - LOG430 - Architecture logicielle - Chargé de laboratoire : Gabriel C. Ullmann, Hiver 2026.
 
+---
 
 Dans ce tutoriel, vous allez utiliser [k3s](https://k3s.io/), une version simplifiée de [Kubernetes](https://github.com/kubernetes/kubernetes) (k8s), pour créer une grappe avec 2 serveurs et déployer l'application de votre environnement de développement à votre environnement de production de manière semi-automatique, en pouvant répliquer votre application et ajouter plusieurs nœuds à la grappe de manière simple.
 
 ## 🎯 Objectifs d'apprentissage
 - Apprendre à utiliser [k3s](https://k3s.io/), une version simplifiée de Kubernetes
-- Apprendre à utiliser [Docker Hub](https://hub.docker.com/repository/docker/nkinesis/store-manager/general) pour héberger vos images Docker
+- Apprendre à utiliser [Docker Hub](https://hub.docker.com/r/nkinesis/store-manager) pour héberger vos images Docker
 - Se familiariser avec la terminologie des grappes de serveurs (master, worker, node, pod, service)
 - Comprendre les avantages d'utiliser un orchestrateur de conteneurs par rapport à simplement utiliser les conteneurs Docker
 
