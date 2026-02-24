@@ -176,10 +176,10 @@ docker push <nom-utilisateur>/<nom-app>:latest
 kubectl rollout restart deployment store-manager
 ```
 
-### 7. Ajoutez un nouveau nœud (optionnel)
+### 7. Ajoutez un nouveau nœud k3s (optionnel)
 Pour ajouter d'autres nœuds à la grappe (ex. une autre VM), répétez l'étape 2.
 
-### 8. Changez le nombre de réplicas (optionnel)
+### 8. Changez le nombre de répliques de l'application Store Manager (optionnel)
 Modifiez l'attribut `replicas` dans `k8s-manifests.yml`. Ici, nous utilisons la valeur par défaut `replicas: 1`. Alternativement :
 
 ```bash
