@@ -40,9 +40,22 @@ jobs:
       - name: Show containers
         run: docker compose ps
 
-      - name: Test health check
-        run: curl --fail http://localhost:5000/health-check
+      - name: Wait for Store Manager health check
+        run: |
+          for i in {1..30}; do
+            echo "Attempt $i: checking Store Manager..."
+            if curl --fail http://localhost:5000/health-check; then
+              echo "Store Manager is ready"
+              exit 0
+            fi
+            sleep 2
+          done
 
+          echo "Store Manager did not become ready in time"
+          docker compose ps
+          docker compose logs store_manager
+          docker compose logs mysql
+          exit 1
       - name: Run smoke tests
         run: docker compose exec -T store_manager pytest -s -vv
 
