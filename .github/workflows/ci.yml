@@ -1,0 +1,53 @@
+name: CI - Labo 05
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-store-manager:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Store Manager
+        uses: actions/checkout@v4
+
+      - name: Create .env file
+        run: |
+          cat > .env << EOF
+          MYSQL_HOST=mysql
+          MYSQL_DB_NAME=labo05_db
+          DB_USERNAME=labo05
+          DB_PASSWORD=labo05
+          DB_PORT=3306
+          REDIS_HOST=redis
+          REDIS_PORT=6379
+          REDIS_DB=0
+          FLASK_APP=src/store_manager.py
+          FLASK_ENV=development
+          PYTHONUNBUFFERED=1
+          EOF
+
+      - name: Create Docker network
+        run: docker network create labo05-network || true
+
+      - name: Build containers
+        run: docker compose build
+
+      - name: Start containers
+        run: docker compose up -d
+
+      - name: Show containers
+        run: docker compose ps
+
+      - name: Test health check
+        run: curl --fail http://localhost:5000/health-check
+
+      - name: Run tests
+        run: docker compose exec -T store_manager pytest -s -vv
+
+      - name: Stop containers
+        if: always()
+        run: docker compose down

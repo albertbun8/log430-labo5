@@ -1,7 +1,9 @@
 services:
   store_manager:
     build: .
-    container_name: store_manager 
+    container_name: store_manager
+    env_file:
+      - .env
     environment:
       - PYTHONUNBUFFERED=1
     volumes:
@@ -17,16 +19,16 @@ services:
         condition: service_healthy
 
   locust:
-     image: locustio/locust
-     ports:
-       - "8089:8089"
-     volumes:
-       - ./locustfiles:/mnt/locust
-     command: -f /mnt/locust/locustfile.py --host=http://api-gateway:8080
-     depends_on:
+    image: locustio/locust
+    ports:
+      - "8089:8089"
+    volumes:
+      - ./locustfiles:/mnt/locust
+    command: -f /mnt/locust/locustfile.py --host=http://api-gateway:8080
+    depends_on:
       - store_manager
-     networks:
-       - labo05-network
+    networks:
+      - labo05-network
 
   prometheus:
     image: prom/prometheus:latest
@@ -37,11 +39,11 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
     command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/etc/prometheus/console_libraries'
-      - '--web.console.templates=/etc/prometheus/consoles'
-      - '--web.enable-lifecycle'
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/etc/prometheus/console_libraries"
+      - "--web.console.templates=/etc/prometheus/consoles"
+      - "--web.enable-lifecycle"
     networks:
       - labo05-network
     depends_on:
@@ -94,6 +96,7 @@ services:
       - labo05-network
     depends_on:
       - store_manager
+      - prometheus
 
 networks:
   labo05-network:
