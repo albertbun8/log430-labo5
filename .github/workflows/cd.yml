@@ -1,0 +1,76 @@
+name: CD - Labo 05
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy-labo05:
+    runs-on: [self-hosted, labo5]
+
+    steps:
+      - name: Create Docker network
+        run: docker network create labo05-network || true
+
+      - name: Update payment repository
+        run: |
+          cd ~/labo5/log430-labo5-payment
+          git pull origin main
+
+      - name: Create payment .env
+        run: |
+          cd ~/labo5/log430-labo5-payment
+          cat > .env << EOF
+          MYSQL_HOST=mysql_payments
+          MYSQL_DB_NAME=labo05_payments_db
+          DB_USERNAME=labo05
+          DB_PASSWORD=labo05
+          DB_PORT=3306
+          FLASK_APP=src/payments_api.py
+          FLASK_ENV=production
+          PYTHONUNBUFFERED=1
+          EOF
+
+      - name: Deploy payment service
+        run: |
+          cd ~/labo5/log430-labo5-payment
+          docker compose down
+          docker compose up -d --build
+
+      - name: Update store manager repository
+        run: |
+          cd ~/labo5/log430-labo5
+          git pull origin main
+
+      - name: Create store manager .env
+        run: |
+          cd ~/labo5/log430-labo5
+          cat > .env << EOF
+          MYSQL_HOST=mysql
+          MYSQL_DB_NAME=labo05_db
+          DB_USERNAME=labo05
+          DB_PASSWORD=labo05
+          DB_PORT=3306
+          REDIS_HOST=redis
+          REDIS_PORT=6379
+          REDIS_DB=0
+          FLASK_APP=src/store_manager.py
+          FLASK_ENV=production
+          PYTHONUNBUFFERED=1
+          EOF
+
+      - name: Deploy store manager
+        run: |
+          cd ~/labo5/log430-labo5
+          docker compose down
+          docker compose up -d --build
+
+      - name: Test store manager
+        run: curl --fail http://localhost:5000/health-check
+
+      - name: Show containers
+        run: |
+          cd ~/labo5/log430-labo5-payment
+          docker compose ps
+          cd ~/labo5/log430-labo5
+          docker compose ps
