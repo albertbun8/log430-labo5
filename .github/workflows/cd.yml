@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy-labo05:
-    runs-on: [self-hosted, labo5]
+    runs-on: self-hosted
 
     steps:
       - name: Create Docker network
@@ -21,11 +21,11 @@ jobs:
         run: |
           cd ~/labo5/log430-labo5-payment
           cat > .env << EOF
-          MYSQL_HOST=mysql_payments
-          MYSQL_DB_NAME=labo05_payments_db
-          DB_USERNAME=labo05
-          DB_PASSWORD=labo05
+          DB_HOST=mysql_payments
           DB_PORT=3306
+          DB_USER=labo05
+          DB_PASSWORD=labo05
+          DB_NAME=labo05_payments_db
           FLASK_APP=src/payments_api.py
           FLASK_ENV=production
           PYTHONUNBUFFERED=1
@@ -46,14 +46,15 @@ jobs:
         run: |
           cd ~/labo5/log430-labo5
           cat > .env << EOF
-          MYSQL_HOST=mysql
-          MYSQL_DB_NAME=labo05_db
-          DB_USERNAME=labo05
-          DB_PASSWORD=labo05
+          DB_HOST=mysql
           DB_PORT=3306
+          DB_USER=labo05
+          DB_PASSWORD=labo05
+          DB_NAME=labo05_db
           REDIS_HOST=redis
           REDIS_PORT=6379
           REDIS_DB=0
+          KAFKA_HOST=labo7-seulement!
           FLASK_APP=src/store_manager.py
           FLASK_ENV=production
           PYTHONUNBUFFERED=1
@@ -65,8 +66,23 @@ jobs:
           docker compose down
           docker compose up -d --build
 
-      - name: Test store manager
-        run: curl --fail http://localhost:5000/health-check
+      - name: Wait for Store Manager health check
+        run: |
+          for i in {1..30}; do
+            echo "Attempt $i: checking Store Manager..."
+            if curl --fail http://localhost:5000/health-check; then
+              echo "Store Manager is ready"
+              exit 0
+            fi
+            sleep 2
+          done
+
+          echo "Store Manager did not become ready in time"
+          cd ~/labo5/log430-labo5
+          docker compose ps
+          docker compose logs store_manager
+          docker compose logs mysql
+          exit 1
 
       - name: Show containers
         run: |
