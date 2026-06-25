@@ -21,7 +21,7 @@ def test_health(client):
     assert result.status_code == 200
     assert result.get_json() == {'status':'ok'}
 
-def test_stock_flow(client):
+def test_stock_flow(client, monkeypatch):
     """Smoke test for complete stock management flow"""
     logger = Logger.get_instance("test")
     
@@ -70,6 +70,11 @@ def test_stock_flow(client):
     user_id = response.get_json()['user_id']
     logger.debug(f"Created user with ID: {user_id}")
     
+    # Mock payment link creation to keep CI independent from payments_api
+    monkeypatch.setattr(
+        "orders.commands.write_order.request_payment_link",
+        lambda order_id, total_amount, user_id: f"http://localhost:8080/payments-api/payments/process/{order_id}"
+    )
     # 4. Create an order with 2 units (POST /orders)
     order_data = {
         'user_id': user_id,

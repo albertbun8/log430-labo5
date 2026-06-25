@@ -105,21 +105,33 @@ def modify_order(order_id: int, is_paid: bool):
         session.close()
 
 def request_payment_link(order_id, total_amount, user_id):
-    payment_id = 0
     payment_transaction = {
         "user_id": user_id,
         "order_id": order_id,
-        "total_amount": total_amount
+        "total_amount": float(total_amount)
     }
 
-    # TODO: Requête à POST /payments
-    print("")
-    response_from_payment_service = {}
+    try:
+        response_from_payment_service = requests.post(
+            "http://api-gateway:8080/payments-api/payments",
+            json=payment_transaction,
+            timeout=5
+        )
 
-    if True: # if response.ok
+        response_from_payment_service.raise_for_status()
+        response_json = response_from_payment_service.json()
+
+        payment_id = response_json.get("payment_id") or response_json.get("id")
+
+        if payment_id is None:
+            raise ValueError(f"Payment ID not found in response: {response_json}")
+
         print(f"ID paiement: {payment_id}")
 
-    return f"http://api-gateway:8080/payments-api/payments/process/{payment_id}" 
+        return f"http://localhost:8080/payments-api/payments/process/{payment_id}"
+
+    except requests.exceptions.RequestException as e:
+        raise Exception(f"Erreur lors de la création du paiement via KrakenD: {e}")
 
 def delete_order(order_id: int):
     """Delete order in MySQL, keep Redis in sync"""
